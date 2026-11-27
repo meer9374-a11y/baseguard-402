@@ -13,7 +13,6 @@ import { analyzeCalldata } from "../../lib/calldata-analyzer.js";
 
 const SPEC = PRICING["calldata-firewall"];
 
-// Default realistic malicious payload for ?demo=true preview: approve(unverified_drainer, MAX_UINT256)
 const DEFAULT_DEMO_CALLDATA =
   "0x095ea7b3000000000000000000000000deadbeefdeadbeefdeadbeefdeadbeefdeadbeef" +
   "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
@@ -33,7 +32,6 @@ export default async function handler(req, res) {
   const to = body.to || query.to || (demo ? "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913" : null);
   const value = body.value || query.value || "0";
 
-  // Paid path bypasses demo throttling
   if (paymentTx) {
     setNoCacheHeaders(res);
     const verification = await verifyX402Payment(paymentTx, SPEC.amount);
@@ -61,7 +59,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // Free edge-cached demo path (protects Vercel Hobby quota)
   if (demo) {
     setDemoCacheHeaders(res);
     const analysis = analyzeCalldata({ calldata, to, value });
@@ -77,7 +74,6 @@ export default async function handler(req, res) {
     });
   }
 
-  // Unpaid request -> HTTP 402 Payment Required
   setNoCacheHeaders(res);
   return res.status(402).json(
     build402Payload({

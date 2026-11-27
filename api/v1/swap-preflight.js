@@ -13,7 +13,7 @@ import { build402Payload, verifyX402Payment } from "../../lib/x402.js";
 import { simulateBaseSwapPreflight } from "../../lib/swap-simulator.js";
 
 const SPEC = PRICING["swap-preflight"];
-const DEFAULT_DEMO_TOKEN = "0x532f27101965dd16442E59d40670FaF5eBB142E4"; // BRETT on Base
+const DEFAULT_DEMO_TOKEN = "0x532f27101965dd16442E59d40670FaF5eBB142E4";
 
 export default async function handler(req, res) {
   setCorsHeaders(res);
