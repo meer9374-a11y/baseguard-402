@@ -1,0 +1,37 @@
+{
+  "name": "baseguard-402",
+  "version": "1.0.0",
+  "protocolVersion": "2024-11-05",
+  "description": "Ultra-Low-Cost Remote MCP & x402 Pre-Trade Firewall on Base ($0.003-$0.005 USDC, Zero API Keys).",
+  "transport": {
+    "type": "streamable-http",
+    "url": "https://baseguard-402.vercel.app/mcp"
+  },
+  "authentication": {
+    "type": "x402",
+    "network": "base",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "payTo": "0x6137ED1A93c8CFF1a6C3112A14bE04883f58E5F7",
+    "header": "X-Payment-Tx",
+    "demoMode": "Pass demo: true in tool arguments for free edge-cached preview"
+  },
+  "tools": [
+    {
+      "name": "audit_evm_calldata",
+      "priceUsd": "$0.003",
+      "amountBaseUnits": "3000"
+    },
+    {
+      "name": "simulate_base_swap_preflight",
+      "priceUsd": "$0.005",
+      "amountBaseUnits": "5000"
+    },
+    {
+      "name": "scan_base_token_intel",
+      "priceUsd": "$0.005",
+      "amountBaseUnits": "5000"
+    }
+  ],
+  "homepage": "https://baseguard-402.vercel.app",
+  "repository": "https://github.com/meer9374-a11y/baseguard-402"
+}

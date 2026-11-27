@@ -1,0 +1,40 @@
+{
+  "x402Version": 1,
+  "name": "BaseGuard-402",
+  "description": "Ultra-Low-Cost Remote MCP & x402 Pre-Trade Firewall and On-Chain Simulation Node on Base L2 ($0.003-$0.005 USDC per call, zero API keys).",
+  "network": "base",
+  "chainId": 8453,
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "payTo": "0x6137ED1A93c8CFF1a6C3112A14bE04883f58E5F7",
+  "antiReplayWindowSeconds": 600,
+  "paymentHeader": "X-Payment-Tx",
+  "endpoints": [
+    {
+      "path": "/api/v1/calldata-firewall",
+      "url": "https://baseguard-402.vercel.app/api/v1/calldata-firewall",
+      "method": "POST",
+      "amount": "3000",
+      "priceUsd": "$0.003",
+      "description": "Deterministic EVM calldata & ABI selector phishing firewall (zero external API limits)"
+    },
+    {
+      "path": "/api/v1/swap-preflight",
+      "url": "https://baseguard-402.vercel.app/api/v1/swap-preflight",
+      "method": "POST",
+      "amount": "5000",
+      "priceUsd": "$0.005",
+      "description": "Direct Base Mainnet RPC swap preflight simulator, pool depth & honeypot bytecode scanner"
+    },
+    {
+      "path": "/api/v1/token-intel",
+      "url": "https://baseguard-402.vercel.app/api/v1/token-intel",
+      "method": "POST",
+      "amount": "5000",
+      "priceUsd": "$0.005",
+      "description": "Edge-cached DexScreener + GoPlus Security Base token aggregator"
+    }
+  ],
+  "mcpEndpoint": "https://baseguard-402.vercel.app/mcp",
+  "healthEndpoint": "https://baseguard-402.vercel.app/api/v1/health",
+  "repository": "https://github.com/meer9374-a11y/baseguard-402"
+}
