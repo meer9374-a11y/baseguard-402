@@ -1,0 +1,114 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BaseGuard-402 API",
+    "version": "1.0.0",
+    "description": "Ultra-Low-Cost Remote MCP & x402 Pre-Trade Firewall and On-Chain Simulation Node on Base L2 ($0.003-$0.005 USDC per call, zero API keys)."
+  },
+  "servers": [
+    {
+      "url": "https://baseguard-402.vercel.app",
+      "description": "BaseGuard-402 Production (Base Mainnet)"
+    }
+  ],
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "Live Base RPC latency, pricing table, and quota optimization telemetry",
+        "responses": {
+          "200": { "description": "Service health JSON" }
+        }
+      }
+    },
+    "/api/v1/calldata-firewall": {
+      "post": {
+        "summary": "Deterministic EVM calldata & ABI selector firewall ($0.003 USDC)",
+        "parameters": [
+          { "name": "demo", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "X-Payment-Tx", "in": "header", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["calldata"],
+                "properties": {
+                  "calldata": { "type": "string", "description": "0x-prefixed EVM calldata" },
+                  "to": { "type": "string", "description": "Optional target contract address" },
+                  "value": { "type": "string", "description": "Optional ETH value in wei" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Calldata risk verdict and decoded ABI findings" },
+          "402": { "description": "x402 Payment Required ($0.003 USDC on Base)" }
+        }
+      }
+    },
+    "/api/v1/swap-preflight": {
+      "post": {
+        "summary": "Direct Base Mainnet RPC swap preflight & honeypot bytecode simulator ($0.005 USDC)",
+        "parameters": [
+          { "name": "demo", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "X-Payment-Tx", "in": "header", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["tokenAddress"],
+                "properties": {
+                  "tokenAddress": { "type": "string" },
+                  "poolAddress": { "type": "string" },
+                  "tradeAmountUsd": { "type": "number", "default": 1000 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "On-chain bytecode & pool reserve preflight verdict" },
+          "402": { "description": "x402 Payment Required ($0.005 USDC on Base)" }
+        }
+      }
+    },
+    "/api/v1/token-intel": {
+      "post": {
+        "summary": "Edge-cached DexScreener + GoPlus Base token intel ($0.005 USDC)",
+        "parameters": [
+          { "name": "demo", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "X-Payment-Tx", "in": "header", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["tokenAddress"],
+                "properties": {
+                  "tokenAddress": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Aggregated liquidity & security risk verdict" },
+          "402": { "description": "x402 Payment Required ($0.005 USDC on Base)" }
+        }
+      }
+    },
+    "/mcp": {
+      "post": {
+        "summary": "Remote MCP JSON-RPC 2.0 endpoint (initialize, tools/list, tools/call)",
+        "responses": {
+          "200": { "description": "JSON-RPC 2.0 response" }
+        }
+      }
+    }
+  }
+}

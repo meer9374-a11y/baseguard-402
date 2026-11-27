@@ -1,0 +1,26 @@
+# BaseGuard-402 ??Ultra-Low-Cost Remote MCP & x402 Pre-Trade Firewall on Base
+
+> Real-time EVM calldata phishing firewall ($0.003 USDC), on-chain Base RPC swap preflight simulation ($0.005 USDC), and edge-cached DexScreener + GoPlus token intel ($0.005 USDC). Zero API keys. Stateless Base Mainnet USDC verification.
+
+## Endpoints
+- Base URL: `https://baseguard-402.vercel.app`
+- Remote MCP (JSON-RPC 2.0, 2024-11-05): `https://baseguard-402.vercel.app/mcp`
+- Health & Live RPC Telemetry: `https://baseguard-402.vercel.app/api/v1/health`
+- Calldata Firewall ($0.003 USDC / 3000 base units): `https://baseguard-402.vercel.app/api/v1/calldata-firewall`
+- Swap Preflight Simulator ($0.005 USDC / 5000 base units): `https://baseguard-402.vercel.app/api/v1/swap-preflight`
+- Token Intel Aggregator ($0.005 USDC / 5000 base units): `https://baseguard-402.vercel.app/api/v1/token-intel`
+
+## x402 Payment Spec
+- Network: `base` (Chain ID `8453`)
+- Asset (USDC): `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
+- Recipient (`payTo`): `0x6137ED1A93c8CFF1a6C3112A14bE04883f58E5F7`
+- Payment Proof Header: `X-Payment-Tx: <0x_base_tx_hash>`
+- Anti-Replay Window: 600 seconds (stateless Base block timestamp check)
+- Free Demo Preview: Append `?demo=true` (60s CDN edge-cached)
+
+## Discovery & Open-Source Integration
+- x402 Manifest: `https://baseguard-402.vercel.app/.well-known/x402.json`
+- MCP Manifest: `https://baseguard-402.vercel.app/.well-known/mcp.json`
+- OpenAPI 3.1 Spec: `https://baseguard-402.vercel.app/openapi.json`
+- GitHub Repository (MIT): https://github.com/meer9374-a11y/baseguard-402
+- Ready-to-copy plugins: `examples/coinbase_agentkit_guard.ts`, `examples/elizaos_guard_action.ts`, `examples/langchain_x402_tool.py`

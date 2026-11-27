@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BaseGuard-402 ??Ultra-Low-Cost x402 & Remote MCP Pre-Trade Firewall on Base</title>
+  <meta name="description" content="Ultra-Low-Cost Remote MCP & x402 Pre-Trade Firewall on Base ($0.003??0.005 USDC, Zero API Keys): Real-time EVM calldata phishing firewall, on-chain swap preflight simulation, and edge-cached token intel." />
+  <style>
+    :root {
+      --bg: #07090f;
+      --surface: #0f1422;
+      --surface-2: #161d30;
+      --border: #24304a;
+      --text: #e6edf7;
+      --muted: #8b9bb8;
+      --blue: #3b82f6;
+      --cyan: #22d3ee;
+      --green: #10b981;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 20% 0%, #0d1b38 0%, var(--bg) 55%);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.55;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 20px 80px; }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px; margin-bottom: 42px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+    .nav-links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.9rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--cyan); }
+    .hero { margin-bottom: 36px; }
+    .pill {
+      display: inline-block; padding: 4px 12px; border-radius: 999px;
+      background: rgba(59, 130, 246, 0.14); border: 1px solid rgba(59, 130, 246, 0.35);
+      color: #93c5fd; font-size: 0.8rem; font-weight: 600; margin-bottom: 14px;
+    }
+    h1 { font-size: clamp(2rem, 4.4vw, 3.2rem); line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.03em; }
+    .gradient { background: linear-gradient(90deg, #60a5fa, #22d3ee, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .sub { color: var(--muted); max-width: 780px; font-size: 1.05rem; margin: 0 0 22px; }
+    .meta-strip {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px; margin-bottom: 36px;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px;
+    }
+    .k { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+    .v { font-family: var(--mono); font-size: 0.95rem; margin-top: 4px; word-break: break-all; }
+    .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 38px; }
+    .price-tag { font-family: var(--mono); font-size: 1.35rem; font-weight: 800; color: var(--green); }
+    .badge { display: inline-block; font-size: 0.72rem; font-family: var(--mono); padding: 2px 8px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); color: var(--cyan); }
+    h2 { font-size: 1.35rem; margin: 34px 0 14px; letter-spacing: -0.02em; }
+    .sandbox { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .tab {
+      background: var(--surface-2); color: var(--muted); border: 1px solid var(--border);
+      padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.88rem;
+    }
+    .tab.active { background: rgba(59, 130, 246, 0.2); border-color: var(--blue); color: #fff; }
+    label { display: block; font-size: 0.82rem; color: var(--muted); margin: 10px 0 6px; }
+    input, textarea {
+      width: 100%; background: #090d17; color: var(--text); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px; font-family: var(--mono); font-size: 0.86rem;
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+    .btn {
+      background: linear-gradient(90deg, #2563eb, #0891b2); color: #fff; border: 0;
+      padding: 10px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
+    }
+    .btn.secondary { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
+    pre {
+      background: #060911; border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px; overflow-x: auto; font-family: var(--mono); font-size: 0.82rem;
+      color: #cbd5e1; margin: 14px 0 0; max-height: 420px;
+    }
+    .code-wrap { position: relative; }
+    .copy-btn {
+      position: absolute; top: 10px; right: 10px;
+      background: var(--surface-2); color: var(--cyan); border: 1px solid var(--border);
+      padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-weight: 600;
+    }
+    .status-ok { color: var(--green); }
+    .status-block { color: var(--red); font-weight: 700; }
+    footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    footer a { color: var(--cyan); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="nav">
+      <div class="brand"><span class="dot"></span> BaseGuard-402</div>
+      <div class="nav-links">
+        <a href="/api/v1/health" target="_blank">Health</a>
+        <a href="/.well-known/x402.json" target="_blank">x402.json</a>
+        <a href="/.well-known/mcp.json" target="_blank">mcp.json</a>
+        <a href="/llms.txt" target="_blank">llms.txt</a>
+        <a href="/openapi.json" target="_blank">OpenAPI</a>
+        <a href="https://github.com/meer9374-a11y/baseguard-402" target="_blank">GitHub</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="pill">x402 Micro-Payments + Remote MCP (2024-11-05) on Base Mainnet</div>
+      <h1>Pre-Trade Firewall for <span class="gradient">Autonomous DeFi Agents</span></h1>
+      <p class="sub">
+        Block unlimited <code>approve(MAX_UINT256)</code> drainers, simulate Base L2 swap preflight via direct RPC, and scan honeypots for <strong>$0.003??0.005 USDC</strong> per call. Zero API keys. Zero subscriptions. Stateless Base Mainnet verification.
+      </p>
+    </section>
+
+    <section class="meta-strip">
+      <div class="card">
+        <div class="k">Remote MCP Endpoint</div>
+        <div class="v" id="mcpUrl">https://baseguard-402.vercel.app/mcp</div>
+      </div>
+      <div class="card">
+        <div class="k">x402 Pay-To (Base USDC)</div>
+        <div class="v">0x6137ED1A93c8CFF1a6C3112A14bE04883f58E5F7</div>
+      </div>
+      <div class="card">
+        <div class="k">Base RPC Status</div>
+        <div class="v" id="rpcStatus">Checking /api/v1/health...</div>
+      </div>
+    </section>
+
+    <section class="price-grid">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="badge">POST /api/v1/calldata-firewall</span>
+          <span class="price-tag">$0.003</span>
+        </div>
+        <h3 style="margin:10px 0 6px;">EVM Calldata Firewall</h3>
+        <p style="color:var(--muted);font-size:0.9rem;margin:0;">Deterministic ABI &amp; selector decoder (0 external API calls). Catches unlimited approvals, <code>setApprovalForAll</code> drainers, EIP-2612 <code>permit</code> phishing &amp; proxy upgrades.</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="badge">POST /api/v1/swap-preflight</span>
+          <span class="price-tag">$0.005</span>
+        </div>
+        <h3 style="margin:10px 0 6px;">Base RPC Swap Preflight</h3>
+        <p style="color:var(--muted);font-size:0.9rem;margin:0;">Direct Base Mainnet <code>eth_call</code> &amp; bytecode scan (<code>owner</code>, <code>paused</code>, <code>blacklist</code>, Uniswap V3 pool depth) to score honeypot risk &amp; price impact.</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="badge">POST /api/v1/token-intel</span>
+          <span class="price-tag">$0.005</span>
+        </div>
+        <h3 style="margin:10px 0 6px;">Edge-Cached Token Intel</h3>
+        <p style="color:var(--muted);font-size:0.9rem;margin:0;">Merges DexScreener liquidity/volume with GoPlus Security honeypot &amp; tax checks, edge-cached for 15s to survive heavy bot bursts.</p>
+      </div>
+    </section>
+
+    <h2>Live Interactive Sandbox (Free Edge-Cached Demo)</h2>
+    <section class="sandbox">
+      <div class="tabs" id="sandboxTabs">
+        <button class="tab active" data-ep="calldata">1. Calldata Firewall ($0.003)</button>
+        <button class="tab" data-ep="preflight">2. Swap Preflight ($0.005)</button>
+        <button class="tab" data-ep="intel">3. Token Intel ($0.005)</button>
+        <button class="tab" data-ep="mcp">4. MCP tools/list</button>
+      </div>
+
+      <div id="inputArea">
+        <label for="payloadInput">Request JSON Body</label>
+        <textarea id="payloadInput" rows="4"></textarea>
+      </div>
+
+      <div class="row">
+        <button class="btn" id="runDemoBtn">Run Live Demo (?demo=true)</button>
+        <button class="btn secondary" id="run402Btn">Test HTTP 402 Challenge</button>
+        <span id="statusLine" style="font-family:var(--mono);font-size:0.85rem;color:var(--muted);"></span>
+      </div>
+
+      <pre id="outputBox">// Click "Run Live Demo" to execute a real request against this BaseGuard-402 node.</pre>
+    </section>
+
+    <h2>10-Second Copy-Paste Integrations</h2>
+    <section class="sandbox">
+      <div class="tabs" id="snippetTabs">
+        <button class="tab active" data-snip="mcp">MCP (Claude / Cursor)</button>
+        <button class="tab" data-snip="agentkit">Coinbase AgentKit</button>
+        <button class="tab" data-snip="eliza">ElizaOS / ai16z</button>
+        <button class="tab" data-snip="langchain">LangChain (Python)</button>
+      </div>
+      <div class="code-wrap">
+        <button class="copy-btn" id="copySnipBtn">Copy</button>
+        <pre id="snippetBox"></pre>
+      </div>
+    </section>
+
+    <footer>
+      <span>BaseGuard-402 · MIT License · Zero Dependencies · Vercel Hobby Quota Protected</span>
+      <span>Ecosystem: <a href="https://alphapulse-402.vercel.app" target="_blank">AlphaPulse-402</a> · <a href="https://cleanread-402.vercel.app" target="_blank">CleanRead-402</a> · <a href="https://showlock-saas.vercel.app" target="_blank">ShowLock AI</a> · <a href="https://closemore-ai-vault.vercel.app" target="_blank">CloseMore AI</a> · <a href="https://spark-audit.vercel.app" target="_blank">SparkAudit</a> · <a href="https://meerwave24.gumroad.com" target="_blank">Digital Storefront</a></span>
+    </footer>
+  </div>
+
+  <script>
+    const ORIGIN = window.location.origin;
+    document.getElementById("mcpUrl").textContent = ORIGIN + "/mcp";
+
+    const DEMO_PAYLOADS = {
+      calldata: {
+        endpoint: "/api/v1/calldata-firewall",
+        body: {
+          calldata: "0x095ea7b3000000000000000000000000deadbeefdeadbeefdeadbeefdeadbeefdeadbeefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          to: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+        }
+      },
+      preflight: {
+        endpoint: "/api/v1/swap-preflight",
+        body: {
+          tokenAddress: "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+          tradeAmountUsd: 2500
+        }
+      },
+      intel: {
+        endpoint: "/api/v1/token-intel",
+        body: {
+          tokenAddress: "0x532f27101965dd16442E59d40670FaF5eBB142E4"
+        }
+      },
+      mcp: {
+        endpoint: "/mcp",
+        body: {
+          jsonrpc: "2.0",
+          id: 1,
+          method: "tools/list",
+          params: {}
+        }
+      }
+    };
+
+    const SNIPPETS = {
+      mcp: `{
+  "mcpServers": {
+    "baseguard-402": {
+      "url": "${ORIGIN}/mcp"
+    }
+  }
+}`,
+      agentkit: `// examples/coinbase_agentkit_guard.ts
+import { assertSafeBaseTrade } from "./examples/coinbase_agentkit_guard";
+
+await assertSafeBaseTrade({
+  calldata: tx.data,
+  to: tx.to,
+  tokenAddress: "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+  tradeAmountUsd: 1000,
+  wallet: agentKitWallet // Auto-pays $0.003-$0.005 Base USDC on HTTP 402
+});`,
+      eliza: `// examples/elizaos_guard_action.ts
+import { baseGuardElizaPlugin } from "./examples/elizaos_guard_action";
+
+export const character = {
+  name: "BaseTradingAgent",
+  plugins: [baseGuardElizaPlugin]
+};`,
+      langchain: `# examples/langchain_x402_tool.py
+from examples.langchain_x402_tool import baseguard_x402_request
+
+res = baseguard_x402_request(
+    "/api/v1/calldata-firewall",
+    {"calldata": "0x095ea7b3000000000000000000000000deadbeefdeadbeefdeadbeefdeadbeefdeadbeefffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},
+    demo=True  # pass pay_usdc_fn in production
+)
+print(res["verdict"])`
+    };
+
+    let currentEp = "calldata";
+    const payloadInput = document.getElementById("payloadInput");
+    const outputBox = document.getElementById("outputBox");
+    const statusLine = document.getElementById("statusLine");
+
+    function loadEp(ep) {
+      currentEp = ep;
+      payloadInput.value = JSON.stringify(DEMO_PAYLOADS[ep].body, null, 2);
+    }
+
+    document.querySelectorAll("#sandboxTabs .tab").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#sandboxTabs .tab").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadEp(btn.dataset.ep);
+      });
+    });
+
+    async function executeRequest(useDemo) {
+      const spec = DEMO_PAYLOADS[currentEp];
+      const url = spec.endpoint + (useDemo && currentEp !== "mcp" ? "?demo=true" : "");
+      statusLine.textContent = "Executing...";
+      const started = performance.now();
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payloadInput.value
+        });
+        const data = await res.json();
+        const ms = Math.round(performance.now() - started);
+        statusLine.textContent = `HTTP ${res.status} ??${ms}ms ??${res.headers.get("cache-control") || "no-store"}`;
+        outputBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        statusLine.textContent = "Request failed";
+        outputBox.textContent = String(err);
+      }
+    }
+
+    document.getElementById("runDemoBtn").addEventListener("click", () => executeRequest(true));
+    document.getElementById("run402Btn").addEventListener("click", () => executeRequest(false));
+
+    // Snippets
+    const snippetBox = document.getElementById("snippetBox");
+    function loadSnip(key) { snippetBox.textContent = SNIPPETS[key]; }
+    document.querySelectorAll("#snippetTabs .tab").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#snippetTabs .tab").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        loadSnip(btn.dataset.snip);
+      });
+    });
+    document.getElementById("copySnipBtn").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(snippetBox.textContent);
+      const b = document.getElementById("copySnipBtn");
+      b.textContent = "Copied!";
+      setTimeout(() => (b.textContent = "Copy"), 1400);
+    });
+
+    loadEp("calldata");
+    loadSnip("mcp");
+
+    // Live health check
+    fetch("/api/v1/health")
+      .then((r) => r.json())
+      .then((h) => {
+        const el = document.getElementById("rpcStatus");
+        if (h.network?.rpc?.ok) {
+          el.innerHTML = `<span class="status-ok">ONLINE</span> ??Block #${h.network.rpc.blockNumber} (${h.network.rpc.latencyMs}ms)`;
+        } else {
+          el.textContent = "Degraded";
+        }
+      })
+      .catch(() => {
+        document.getElementById("rpcStatus").textContent = "Unavailable";
+      });
+  </script>
+</body>
+</html>
