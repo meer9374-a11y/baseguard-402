@@ -1,0 +1,36 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "rewrites": [
+    { "source": "/mcp", "destination": "/api/mcp" },
+    { "source": "/api/mcp", "destination": "/api/mcp" },
+    { "source": "/api/v1/health", "destination": "/api/v1/health" },
+    { "source": "/api/v1/calldata-firewall", "destination": "/api/v1/calldata-firewall" },
+    { "source": "/api/v1/swap-preflight", "destination": "/api/v1/swap-preflight" },
+    { "source": "/api/v1/token-intel", "destination": "/api/v1/token-intel" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, X-Payment-Tx, X-Payment, Authorization" }
+      ]
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
+      "source": "/(llms\\.txt|openapi\\.json)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=600" }
+      ]
+    }
+  ]
+}
